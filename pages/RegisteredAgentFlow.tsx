@@ -121,6 +121,11 @@ export default function RegisteredAgentFlow() {
     setStep((s) => Math.max(s - 1, 0));
   };
 
+  // Scroll to top on every step change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [step]);
+
   // Reset analysis state when entering step 3
   useEffect(() => {
     if (step === 3) {
@@ -310,19 +315,26 @@ export default function RegisteredAgentFlow() {
         </AnimatePresence>
       </div>
 
-      {/* Trust bar footer */}
-      <TrustBar />
+      {/* Trust bar footer — hidden on mobile when sticky CTA is showing */}
+      <div className={showMobileFooter ? "hidden tablet:block" : ""}>
+        <TrustBar />
+      </div>
 
       {/* Mobile: Sticky CTA footer */}
       {showMobileFooter && (
-        <div className="block tablet:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-100 shadow-sticky p-lg z-50">
-          <CTAButton
-            fullWidth
-            onClick={goNextGuarded}
-            disabled={!canProceed}
-          >
-            {mobileCTALabels[step]}
-          </CTAButton>
+        <div
+          className="tablet:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-100 z-50"
+          style={{ boxShadow: "0px -2px 28px 0px rgba(0,0,0,0.24)" }}
+        >
+          <div className="px-lg py-md">
+            <CTAButton
+              fullWidth
+              onClick={goNextGuarded}
+              disabled={!canProceed}
+            >
+              {mobileCTALabels[step]}
+            </CTAButton>
+          </div>
         </div>
       )}
     </div>
@@ -377,7 +389,7 @@ function StepWelcome({ formData, update, onNext, disabled }: StepProps) {
           fullWidth
           onClick={onNext}
           disabled={disabled}
-          className="max-w-[420px]"
+          className="max-w-[420px] hidden tablet:flex"
         >
           Get started
         </CTAButton>
@@ -442,6 +454,7 @@ function StepStartDate({ formData, update, onNext, disabled }: StepProps) {
           fullWidth
           onClick={onNext}
           disabled={disabled}
+          className="hidden tablet:flex"
         >
           Continue
         </CTAButton>
@@ -632,7 +645,7 @@ function StepAnalysis({
       </MotionFadeIn>
 
       {/* CTA */}
-      <MotionFadeIn>
+      <MotionFadeIn className="hidden tablet:block">
         <CTAButton fullWidth onClick={onNext}>
           See your personalized plan
         </CTAButton>
@@ -725,7 +738,7 @@ function StepPricing({ formData, update, onNext }: StepProps) {
       </MotionFadeIn>
 
       {/* CTA */}
-      <MotionFadeIn className="w-full flex flex-col items-center gap-md">
+      <MotionFadeIn className="w-full flex-col items-center gap-md hidden tablet:flex">
         <CTAButton fullWidth onClick={onNext}>
           Continue
         </CTAButton>
@@ -784,6 +797,7 @@ function StepPersonalInfo({ formData, update, onNext, disabled }: StepProps) {
           fullWidth
           onClick={onNext}
           disabled={disabled}
+          className="hidden tablet:flex"
         >
           Continue
         </CTAButton>
@@ -817,6 +831,7 @@ function StepEntityName({ formData, update, onNext, disabled }: StepProps) {
           fullWidth
           onClick={onNext}
           disabled={disabled}
+          className="hidden tablet:flex"
         >
           Continue
         </CTAButton>
@@ -922,7 +937,7 @@ function StepCheckout({ formData, update, onNext, disabled }: StepProps) {
         </div>
       </MotionFadeIn>
 
-      <MotionFadeIn className="w-full">
+      <MotionFadeIn className="w-full hidden tablet:block">
         <CTAButton
           fullWidth
           onClick={onNext}

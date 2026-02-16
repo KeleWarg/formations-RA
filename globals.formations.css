@@ -1,0 +1,196 @@
+/* ─── Formations Global Styles ─────────────────────────────
+ * Font: Gilroy (primary), Euclid Circular B (secondary)
+ * Theme: Forbes Business Hub / Formations
+ * ─────────────────────────────────────────────────────── */
+
+/* If loading Gilroy from local files (preferred for performance) */
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Euclid Circular B';
+  src: url('/fonts/EuclidCircularB-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── Tailwind Layers ───────────────────────────────── */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Custom Properties (Formations Tokens) ────── */
+
+@layer base {
+  :root {
+    /* Colors */
+    --color-primary-50: #F5F5FF;
+    --color-primary-100: #D3C9FF;
+    --color-primary-200: #BEA4FF;
+    --color-primary-300: #937DE8;
+    --color-primary-400: #6C4AE1;
+    --color-primary-500: #4817C2;
+    --color-primary-600: #35118F;
+    --color-primary-700: #1B0948;
+    --color-primary-800: #10052B;
+
+    --color-secondary-50: #F2F7F0;
+    --color-secondary-100: #D3EBD9;
+    --color-secondary-200: #A9D6B7;
+    --color-secondary-300: #71C78C;
+    --color-secondary-400: #4BA375;
+    --color-secondary-500: #2F7F51;
+    --color-secondary-600: #005A44;
+    --color-secondary-700: #143A3A;
+    --color-secondary-800: #143A3A;
+
+    --color-tertiary-50: #FFF8F5;
+    --color-tertiary-100: #FFEFE0;
+    --color-tertiary-200: #F2D7AE;
+    --color-tertiary-300: #EDC385;
+    --color-tertiary-400: #F3C060;
+
+    --color-quaternary-50: #FAF1F0;
+    --color-quaternary-100: #FCE0DE;
+    --color-quaternary-200: #F7C0BC;
+    --color-quaternary-300: #ED908A;
+    --color-quaternary-400: #E05166;
+    --color-quaternary-500: #CA1643;
+    --color-quaternary-600: #A91B34;
+    --color-quaternary-700: #7A0F2A;
+    --color-quaternary-800: #381B21;
+
+    --color-neutral-50: #FFFFFF;
+    --color-neutral-100: #E5E5E5;
+    --color-neutral-200: #A7A7B0;
+    --color-neutral-300: #8E8E96;
+    --color-neutral-400: #606064;
+    --color-neutral-500: #4C4C53;
+    --color-neutral-600: #313132;
+    --color-neutral-700: #252526;
+    --color-neutral-800: #171614;
+
+    /* Semantic */
+    --text-dark-blue: #002142;
+    --text-secondary-blue: #243443;
+    --outline: #DFDFDF;
+
+    /* Spacing */
+    --spacing-2xs: 2px;
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 24px;
+    --spacing-2xl: 32px;
+    --spacing-3xl: 40px;
+    --spacing-4xl: 48px;
+
+    /* Radius */
+    --radius-xl: 24px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --radius-xs: 4px;
+    --radius-none: 0px;
+
+    /* Font */
+    --font-sans: 'Gilroy', sans-serif;
+    --font-euclid: 'Euclid Circular B', sans-serif;
+  }
+}
+
+/* ─── Component Layer ──────────────────────────────── */
+
+@layer components {
+  /* Primary CTA Button */
+  .btn-primary {
+    @apply bg-primary-500 text-white font-medium text-body-lg
+           py-md px-lg rounded-lg h-14
+           flex items-center justify-center
+           hover:bg-primary-600 transition-colors
+           opacity-[0.98] overflow-hidden;
+  }
+
+  /* Secondary/Ghost Button */
+  .btn-ghost {
+    @apply text-primary-500 font-medium text-body-lg
+           underline decoration-solid
+           py-lg px-lg rounded-lg
+           flex items-center justify-center
+           shadow-button;
+  }
+
+  /* Green top banner */
+  .banner-green {
+    @apply bg-secondary-500 text-white font-semibold text-body-xs
+           tracking-wider uppercase
+           py-sm px-xl rounded-t-lg
+           flex items-center justify-center;
+  }
+
+  /* Info callout (slate bg) */
+  .callout-info {
+    @apply bg-info-bg rounded-[14px] py-sm px-lg;
+  }
+
+  /* Bonus callout (light green bg) */
+  .callout-bonus {
+    @apply bg-bonus-bg py-md px-xl;
+  }
+
+  /* Card container */
+  .card-partner {
+    @apply bg-white border border-outline rounded-lg shadow-card overflow-hidden;
+  }
+
+  /* Check item row */
+  .check-item {
+    @apply flex gap-sm items-start;
+  }
+
+  /* Form option (radio-style card) */
+  .form-option {
+    @apply bg-white border border-outline rounded-sm shadow-input
+           py-md px-lg cursor-pointer
+           hover:border-primary-500 transition-colors;
+  }
+  .form-option.selected {
+    @apply border-primary-500;
+  }
+}

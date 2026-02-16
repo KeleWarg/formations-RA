@@ -1,0 +1,208 @@
+---
+description: Formations design system — tokens, shared components, and page specifications. Reference this for ALL Formations UI work.
+globs: ["**/*.tsx", "**/*.jsx", "**/*.css", "**/*.scss"]
+alwaysApply: false
+---
+
+# Formations Design System
+
+## Identity
+- **Theme:** Formations (Forbes Advisor sub-brand)
+- **Font:** Gilroy (sans-serif), Euclid Circular B (secondary)
+- **Primary color:** Purple (#4817C2)
+- **Secondary color:** Green (#2F7F51)
+- **Stack:** Next.js 14+ (App Router), Tailwind CSS, TypeScript
+- **Icons:** lucide-react
+
+---
+
+## Colors
+
+### Primary (Purple)
+- `primary-50: #F5F5FF` | `primary-100: #D3C9FF` | `primary-200: #BEA4FF`
+- `primary-300: #937DE8` | `primary-400: #6C4AE1` | `primary-500: #4817C2` ← default
+- `primary-600: #35118F` ← hover | `primary-700: #1B0948` | `primary-800: #10052B`
+
+### Secondary (Green)
+- `secondary-50: #F2F7F0` | `secondary-100: #D3EBD9` | `secondary-200: #A9D6B7`
+- `secondary-300: #71C78C` | `secondary-400: #4BA375` | `secondary-500: #2F7F51` ← default
+- `secondary-600: #005A44` | `secondary-700: #143A3A` | `secondary-800: #143A3A`
+
+### Tertiary (Amber)
+- `tertiary-50: #FFF8F5` | `tertiary-100: #FFEFE0` | `tertiary-200: #F2D7AE`
+- `tertiary-300: #EDC385` | `tertiary-400: #F3C060` ← default
+
+### Quaternary (Rose)
+- `quaternary-50: #FAF1F0` | `quaternary-100: #FCE0DE` | `quaternary-200: #F7C0BC`
+- `quaternary-300: #ED908A` | `quaternary-400: #E05166` | `quaternary-500: #CA1643`
+- `quaternary-600: #A91B34` | `quaternary-700: #7A0F2A` | `quaternary-800: #381B21`
+
+### Neutral
+- `neutral-50: #FFFFFF` | `neutral-100: #E5E5E5` | `neutral-200: #A7A7B0`
+- `neutral-300: #8E8E96` | `neutral-400: #606064` | `neutral-500: #4C4C53`
+- `neutral-600: #313132` | `neutral-700: #252526` | `neutral-800: #171614`
+
+### Semantic Aliases
+- `text-dark-blue: #002142` — headings
+- `text-secondary-blue: #243443` — disclaimers
+- `outline: #DFDFDF` — card borders, dividers
+- `info-bg: #F1F5F9` — info banners (slate)
+- `bonus-bg: #F1FFFC` — bonus callouts (green tint)
+
+### Semantic Usage
+- **Primary actions** (buttons, links, focus): primary-500 → primary-600 hover
+- **Success/positive**: secondary-500
+- **Warnings/highlights**: tertiary-400
+- **Errors/destructive**: quaternary-500
+- **Headings**: text-dark-blue (#002142)
+- **Body text**: neutral-800 (#171614)
+- **Secondary text**: neutral-400
+- **Borders**: outline (#DFDFDF) or neutral-100
+
+---
+
+## Typography
+
+Font: `'Gilroy', sans-serif`
+
+### Sizes (Desktop → Mobile)
+- `heading-lg`: 64px/76px → 48px/58px
+- `heading-md`: 56px/68px → 40px/52px
+- `heading-sm`: 48px/58px → 36px/42px
+- `title-lg`: 40px/52px → 32px/44px
+- `title-md`: 36px/42px → 24px/32px
+- `title-sm`: 24px/32px → 20px/26px
+- `title-xs`: 20px/30px → 18px/28px
+- `body-lg`: 18px/28px → 16px/24px
+- `body-md`: 16px/24px → 14px/22px
+- `body-sm`: 14px/22px → 12px/18px
+- `body-xs`: 12px/18px → 10px/14px
+
+### Weights
+bold: 700 | semibold: 600 | medium: 500 | regular: 400 | light: 300
+
+### Letter Spacing
+tighter: -0.2px | tight: -0.1px | normal: 0 | wide: 0.5px | wider: 1px
+
+---
+
+## Spacing
+`2xs: 2px` | `xs: 4px` | `sm: 8px` | `md: 12px` | `lg: 16px` | `xl: 24px` | `2xl: 32px` | `3xl: 40px` | `4xl: 48px`
+
+## Radius
+`none: 0` | `xs: 4px` | `sm: 8px` | `md: 12px` | `lg: 16px` | `xl: 24px`
+
+## Shadows
+- `card: 0 4px 4px rgba(0,0,0,0.09)` — partner cards
+- `header: 0 2px 2px rgba(0,0,0,0.04)` — top nav
+- `header-alt: 0 6px 9px rgba(0,0,0,0.06)` — alt header
+- `button: 0 4px 16px rgba(0,0,0,0.08)` — ghost buttons
+- `input: 0 1px 4.3px rgba(0,0,0,0.1)` — form options
+- `md: 0 4px 6px 6px rgba(0,0,0,0.04)` — dropdowns
+- `lg: 0 5px 12px 6px rgba(0,0,0,0.10)` — modals
+- `sticky: 0 -2px 28px rgba(0,0,0,0.24)` — sticky footers
+
+## Breakpoints / Grid
+| | Desktop (≥1440) | Tablet (≥744) | Mobile (≤743) |
+|---|---|---|---|
+| Columns | 12 | 8 | 4 |
+| Margin | 80px | 24px | 16px |
+| Gutter | 24px | 24px | 12px |
+
+Tailwind prefixes: `tablet:` and `desktop:` for responsive.
+
+---
+
+## Shared Components Library
+
+Import from `@/components/formations-ui`:
+
+### Layout
+- `Header` — `variant: "desktop" | "mobile"`, `securedText?: string`
+  - Formations + Forbes Advisor co-brand, lock icon, responsive
+- `BackButton` — `onClick?: () => void`
+  - ChevronLeft + "Back" text
+
+### Buttons
+- `CTAButton` — `variant: "primary" | "ghost"`, `fullWidth?: boolean`
+  - Primary: bg-primary-500, white text, rounded-lg, h-14
+  - Ghost: text-primary-500, underline, shadow-button
+- `FormOption` — `label: string`, `selected?: boolean`, `onClick`
+  - Radio-card pattern. Selected: border-primary-500. Default: border-outline
+
+### Data Display
+- `CheckItem` — `text: string` — green check circle + text row
+- `CheckCircle` — standalone green check icon SVG
+- `GreenBanner` — `text?: string` — green bg-secondary-500 uppercase bar
+- `BonusCallout` — `regularText + highlightText` — green tint bg with discount icon
+- `InfoBanner` — `icon?, text, learnMore?` — slate bg-info-bg with chevron
+- `InfoTip` — `text: string` — bottom card tip with info icon
+- `SocialProof` — `text + avatarSrcs?` — overlapping circles + trust text
+- `Disclaimer` — `text: string` — centered small footnote text
+- `PreferredPartnerBadge` — green pill badge
+
+---
+
+## Page Specifications
+
+### BankUpsellOptimized (Desktop 1440px)
+**Figma:** `1:1842` | **File:** `pages/BankUpsellOptimized.tsx`
+- Header (desktop) with Formations + Forbes co-brand
+- Title: "Next Up - Let's Separate {companyName}'s Finances" (title-lg, bold)
+  - Company name in primary-500
+- InfoBanner with lightbulb icon
+- Partner card (card-partner class):
+  - GreenBanner → Logo + name → BonusCallout → 6x CheckItem
+- CTAButton primary (w-366) + Info icon
+- SocialProof: "Over 250,000 business owners trust Novo"
+- CTAButton ghost: "No, thanks"
+- Two Disclaimer blocks
+
+### BankUpsellMobile (375px)
+**Figma:** `1:229` | **File:** `pages/BankUpsellMobile.tsx`
+- Header (mobile)
+- Title includes "With a Business Bank Account"
+- Partner card adds PreferredPartnerBadge + InfoTip
+- Sticky CTA footer: CTAButton fullWidth + "No, thanks" link
+- Content scrollable with pb-[180px] for footer clearance
+
+### AcceptPaymentPrompt (Responsive)
+**Figma:** `1:2422` (desktop), `1:2557` (mobile) | **File:** `pages/AcceptPaymentPrompt.tsx`
+- BackButton top-left
+- Credit card check icon (centered)
+- Title: "Will {companyName} be accepting credit card payments?" (title-sm, bold)
+- Subtitle: "Just your best guess..." (body-md, opacity-60)
+- Two FormOption cards (max-w-424)
+- CTAButton primary (w-366)
+- Mobile: sticky CTA at bottom
+
+### TaskDashboard (Desktop 1440px)
+**Figma:** `1:675` | **File:** `pages/TaskDashboard.tsx`
+- SidebarNav: 68px wide, 4 icons (Home, Documents, Certificates, Business)
+- CompanyHeader: name, status badge, order number, EIN, card
+- ProgressBar: tertiary-300 percentage badge + secondary-400 fill bar
+- 11 ChecklistTasks with states:
+  - `available`: numbered, "Go To Task →"
+  - `locked`: Lock icon, "Available After State Approval"
+  - `completed`: green check, optionally with partner note bar
+- Category badges color-coded:
+  - Licensing: primary-50/primary-500
+  - Compliance: neutral-100/neutral-500
+  - Risk: quaternary-50/quaternary-500
+  - Payment: secondary-50/secondary-600
+  - Financial: tertiary-50/tertiary-400
+  - Marketing: quaternary-50/quaternary-400
+
+---
+
+## Component Patterns (for new components)
+
+- **Buttons**: rounded-sm (8px), py-md px-lg, primary-500 bg, white text
+- **Cards**: rounded-lg (16px), shadow-card, border border-outline, p-xl
+- **Inputs**: rounded-sm, border-xs, p-sm, neutral-400 placeholder
+- **Modals**: rounded-xl (24px), shadow-lg
+- **Badges/Tags**: rounded-xs (4px), px-sm py-[2px]
+- **Hover**: darken one stop (primary-500 → primary-600)
+- **Disabled**: opacity-50
+- **Focus rings**: 2px solid primary-400, 2px offset
+- **Sticky footers**: shadow-sticky, border-t border-neutral-100

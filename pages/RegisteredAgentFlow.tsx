@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Header,
@@ -105,6 +105,8 @@ export default function RegisteredAgentFlow() {
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [direction, setDirection] = useState(1);
+  const [analysisPhase, setAnalysisPhase] = useState<"loading" | "complete">("loading");
+  const [analysisProgress, setAnalysisProgress] = useState(0);
 
   const update = (fields: Partial<FormData>) =>
     setFormData((prev) => ({ ...prev, ...fields }));
@@ -119,10 +121,79 @@ export default function RegisteredAgentFlow() {
     setStep((s) => Math.max(s - 1, 0));
   };
 
+  // Reset analysis state when entering step 3
+  useEffect(() => {
+    if (step === 3) {
+      setAnalysisPhase("loading");
+      setAnalysisProgress(0);
+
+      // Animate progress from 0 to 100 over ~3s
+      const duration = 3000;
+      const interval = 50;
+      let elapsed = 0;
+      const timer = setInterval(() => {
+        elapsed += interval;
+        const t = Math.min(elapsed / duration, 1);
+        // Ease-out curve for natural feel
+        const eased = 1 - Math.pow(1 - t, 3);
+        setAnalysisProgress(Math.round(eased * 100));
+        if (elapsed >= duration) {
+          clearInterval(timer);
+          setAnalysisPhase("complete");
+        }
+      }, interval);
+
+      return () => clearInterval(timer);
+    }
+  }, [step]);
+
   const progressPercent = step === 0 ? 0 : step >= 9 ? 100 : (step / 9) * 100;
   const selectedPlan = PLANS[formData.planIndex];
   const showProgress = step > 0 && step < 9;
   const showBack = step > 0 && step < 9;
+
+  // Centralized step validation
+  const isStepValid = (): boolean => {
+    switch (step) {
+      case 0:
+        return !!formData.state;
+      case 1:
+        return !!formData.employees;
+      case 2:
+        return !!formData.startDate.trim();
+      case 3:
+        return analysisPhase === "complete";
+      case 4:
+        return true;
+      case 5:
+        return !!(
+          formData.firstName.trim() &&
+          formData.lastName.trim() &&
+          formData.email.trim() &&
+          formData.phone.trim()
+        );
+      case 6:
+        return !!formData.entityName.trim();
+      case 7:
+        return !!formData.entityType;
+      case 8:
+        return !!(
+          formData.cardName.trim() &&
+          formData.cardNumber.trim() &&
+          formData.cardExpiry.trim() &&
+          formData.cardCvc.trim()
+        );
+      default:
+        return true;
+    }
+  };
+
+  const canProceed = isStepValid();
+
+  const goNextGuarded = () => {
+    if (!canProceed) return;
+    goNext();
+  };
 
   const mobileCTALabels: Record<number, string> = {
     0: "Get started",
@@ -148,11 +219,38 @@ export default function RegisteredAgentFlow() {
       {/* Progress bar */}
       {step === 3 ? (
         <div className="flex flex-col items-center gap-xs pt-md">
-          <div className="flex items-center gap-xs text-secondary-500">
-            <CheckCircle className="w-4 h-4" />
-            <span className="text-body-sm font-medium">Analysis complete</span>
-          </div>
-          <ProgressBar progress={100} color="secondary" />
+          <AnimatePresence mode="wait">
+            {analysisPhase === "loading" ? (
+              <motion.div
+                key="analyzing"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex items-center gap-xs text-neutral-400"
+              >
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="w-4 h-4 border-2 border-neutral-200 border-t-primary-500 rounded-full"
+                />
+                <span className="text-body-sm font-medium">Analyzing your business…</span>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="complete"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-xs text-secondary-500"
+              >
+                <CheckCircle className="w-4 h-4" />
+                <span className="text-body-sm font-medium">Analysis complete</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <ProgressBar
+            progress={analysisProgress}
+            color={analysisPhase === "complete" ? "secondary" : "primary"}
+          />
         </div>
       ) : showProgress ? (
         <ProgressBar progress={progressPercent} />
@@ -181,31 +279,31 @@ export default function RegisteredAgentFlow() {
             }`}
           >
             {step === 0 && (
-              <StepWelcome formData={formData} update={update} onNext={goNext} />
+              <StepWelcome formData={formData} update={update} onNext={goNextGuarded} disabled={!canProceed} />
             )}
             {step === 1 && (
               <StepEmployees formData={formData} update={update} onNext={goNext} />
             )}
             {step === 2 && (
-              <StepStartDate formData={formData} update={update} onNext={goNext} />
+              <StepStartDate formData={formData} update={update} onNext={goNextGuarded} disabled={!canProceed} />
             )}
             {step === 3 && (
-              <StepAnalysis formData={formData} onNext={goNext} />
+              <StepAnalysis formData={formData} onNext={goNextGuarded} analysisPhase={analysisPhase} />
             )}
             {step === 4 && (
-              <StepPricing formData={formData} update={update} onNext={goNext} />
+              <StepPricing formData={formData} update={update} onNext={goNextGuarded} />
             )}
             {step === 5 && (
-              <StepPersonalInfo formData={formData} update={update} onNext={goNext} />
+              <StepPersonalInfo formData={formData} update={update} onNext={goNextGuarded} disabled={!canProceed} />
             )}
             {step === 6 && (
-              <StepEntityName formData={formData} update={update} onNext={goNext} />
+              <StepEntityName formData={formData} update={update} onNext={goNextGuarded} disabled={!canProceed} />
             )}
             {step === 7 && (
               <StepEntityType formData={formData} update={update} onNext={goNext} />
             )}
             {step === 8 && (
-              <StepCheckout formData={formData} update={update} onNext={goNext} />
+              <StepCheckout formData={formData} update={update} onNext={goNextGuarded} disabled={!canProceed} />
             )}
             {step === 9 && <StepConfirmation formData={formData} />}
           </motion.div>
@@ -218,7 +316,11 @@ export default function RegisteredAgentFlow() {
       {/* Mobile: Sticky CTA footer */}
       {showMobileFooter && (
         <div className="block tablet:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-100 shadow-sticky p-lg z-50">
-          <CTAButton fullWidth onClick={goNext}>
+          <CTAButton
+            fullWidth
+            onClick={goNextGuarded}
+            disabled={!canProceed}
+          >
             {mobileCTALabels[step]}
           </CTAButton>
         </div>
@@ -233,6 +335,7 @@ interface StepProps {
   formData: FormData;
   update: (fields: Partial<FormData>) => void;
   onNext: () => void;
+  disabled?: boolean;
 }
 
 interface ReadOnlyStepProps {
@@ -242,7 +345,7 @@ interface ReadOnlyStepProps {
 
 // ─── STEP 0: WELCOME ───────────────────────────────────
 
-function StepWelcome({ formData, update, onNext }: StepProps) {
+function StepWelcome({ formData, update, onNext, disabled }: StepProps) {
   return (
     <MotionStagger className="flex flex-col items-center gap-xl max-w-[630px] w-full pt-xl tablet:pt-[60px] pb-xl">
       <MotionFadeIn className="flex flex-col items-center gap-xl w-full">
@@ -273,6 +376,7 @@ function StepWelcome({ formData, update, onNext }: StepProps) {
         <CTAButton
           fullWidth
           onClick={onNext}
+          disabled={disabled}
           className="max-w-[420px]"
         >
           Get started
@@ -317,7 +421,7 @@ function StepEmployees({ formData, update, onNext }: StepProps) {
 
 // ─── STEP 2: BUSINESS START DATE ────────────────────────
 
-function StepStartDate({ formData, update, onNext }: StepProps) {
+function StepStartDate({ formData, update, onNext, disabled }: StepProps) {
   return (
     <MotionStagger className="flex flex-col items-center gap-xl max-w-[500px] w-full pt-xl pb-xl">
       <MotionFadeIn className="flex flex-col items-center gap-sm text-center">
@@ -334,7 +438,11 @@ function StepStartDate({ formData, update, onNext }: StepProps) {
           value={formData.startDate}
           onChange={(val) => update({ startDate: val })}
         />
-        <CTAButton fullWidth onClick={onNext}>
+        <CTAButton
+          fullWidth
+          onClick={onNext}
+          disabled={disabled}
+        >
           Continue
         </CTAButton>
       </MotionFadeIn>
@@ -342,10 +450,88 @@ function StepStartDate({ formData, update, onNext }: StepProps) {
   );
 }
 
+// ─── ANALYSIS LOADER ITEMS ──────────────────────────────
+
+const ANALYSIS_STEPS = [
+  "Checking state requirements…",
+  "Reviewing compliance risks…",
+  "Preparing your personalized report…",
+];
+
 // ─── STEP 3: ANALYSIS / VALUE PROP ──────────────────────
 
-function StepAnalysis({ formData, onNext }: ReadOnlyStepProps) {
+function StepAnalysis({
+  formData,
+  onNext,
+  analysisPhase,
+}: ReadOnlyStepProps & { analysisPhase: "loading" | "complete" }) {
   const stateName = formData.state || "your state";
+  const [visibleItems, setVisibleItems] = useState(0);
+
+  useEffect(() => {
+    if (analysisPhase === "loading") {
+      setVisibleItems(0);
+      const stepDelay = 3000 / (ANALYSIS_STEPS.length + 1);
+      const timers = ANALYSIS_STEPS.map((_, i) =>
+        setTimeout(() => setVisibleItems(i + 1), stepDelay * (i + 1))
+      );
+      return () => timers.forEach(clearTimeout);
+    }
+  }, [analysisPhase]);
+
+  // Show interstitial while loading
+  if (analysisPhase === "loading") {
+    return (
+      <div className="flex flex-col items-center justify-center gap-xl max-w-[400px] w-full pt-[80px] pb-xl">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col items-center gap-md text-center"
+        >
+          <div className="w-[56px] h-[56px] rounded-full bg-primary-50 flex items-center justify-center">
+            <Shield className="w-6 h-6 text-primary-500" />
+          </div>
+          <h2 className="text-title-xs font-bold text-text-dark-blue">
+            Analyzing your business…
+          </h2>
+          <p className="text-body-sm text-neutral-400">
+            We&apos;re reviewing {stateName} requirements for your business.
+          </p>
+        </motion.div>
+
+        <div className="flex flex-col gap-md w-full">
+          {ANALYSIS_STEPS.map((label, i) => (
+            <motion.div
+              key={label}
+              initial={{ opacity: 0, x: -10 }}
+              animate={
+                i < visibleItems
+                  ? { opacity: 1, x: 0 }
+                  : { opacity: 0.3, x: 0 }
+              }
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="flex items-center gap-md"
+            >
+              {i < visibleItems ? (
+                <CheckCircle className="w-5 h-5 shrink-0" />
+              ) : (
+                <div className="w-5 h-5 rounded-full border-2 border-neutral-200 shrink-0" />
+              )}
+              <span
+                className={`text-body-sm ${
+                  i < visibleItems
+                    ? "text-neutral-800 font-medium"
+                    : "text-neutral-300"
+                }`}
+              >
+                {label}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <MotionStagger className="flex flex-col gap-xl max-w-[560px] w-full pt-xl pb-xl">
@@ -553,13 +739,7 @@ function StepPricing({ formData, update, onNext }: StepProps) {
 
 // ─── STEP 5: PERSONAL INFO ──────────────────────────────
 
-function StepPersonalInfo({ formData, update, onNext }: StepProps) {
-  const isValid =
-    formData.firstName.trim() &&
-    formData.lastName.trim() &&
-    formData.email.trim() &&
-    formData.phone.trim();
-
+function StepPersonalInfo({ formData, update, onNext, disabled }: StepProps) {
   return (
     <MotionStagger className="flex flex-col items-center gap-xl max-w-[560px] w-full pt-xl pb-xl">
       <MotionFadeIn className="flex flex-col items-center gap-sm text-center">
@@ -600,7 +780,11 @@ function StepPersonalInfo({ formData, update, onNext }: StepProps) {
           value={formData.phone}
           onChange={(val) => update({ phone: val })}
         />
-        <CTAButton fullWidth onClick={onNext} className={!isValid ? "opacity-50" : ""}>
+        <CTAButton
+          fullWidth
+          onClick={onNext}
+          disabled={disabled}
+        >
           Continue
         </CTAButton>
       </MotionFadeIn>
@@ -610,7 +794,7 @@ function StepPersonalInfo({ formData, update, onNext }: StepProps) {
 
 // ─── STEP 6: ENTITY NAME ────────────────────────────────
 
-function StepEntityName({ formData, update, onNext }: StepProps) {
+function StepEntityName({ formData, update, onNext, disabled }: StepProps) {
   return (
     <MotionStagger className="flex flex-col items-center gap-xl max-w-[560px] w-full pt-xl pb-xl">
       <MotionFadeIn className="flex flex-col items-center gap-sm text-center">
@@ -632,7 +816,7 @@ function StepEntityName({ formData, update, onNext }: StepProps) {
         <CTAButton
           fullWidth
           onClick={onNext}
-          className={!formData.entityName.trim() ? "opacity-50" : ""}
+          disabled={disabled}
         >
           Continue
         </CTAButton>
@@ -676,15 +860,9 @@ function StepEntityType({ formData, update, onNext }: StepProps) {
 
 // ─── STEP 8: CHECKOUT ───────────────────────────────────
 
-function StepCheckout({ formData, update, onNext }: StepProps) {
+function StepCheckout({ formData, update, onNext, disabled }: StepProps) {
   const plan = PLANS[formData.planIndex];
   const stateName = formData.state || "your state";
-
-  const isValid =
-    formData.cardName.trim() &&
-    formData.cardNumber.trim() &&
-    formData.cardExpiry.trim() &&
-    formData.cardCvc.trim();
 
   return (
     <MotionStagger className="flex flex-col items-center gap-xl max-w-[560px] w-full pt-xl pb-xl">
@@ -748,7 +926,7 @@ function StepCheckout({ formData, update, onNext }: StepProps) {
         <CTAButton
           fullWidth
           onClick={onNext}
-          className={!isValid ? "opacity-50" : ""}
+          disabled={disabled}
         >
           Complete my order
         </CTAButton>

@@ -102,6 +102,7 @@ interface CTAButtonProps {
   variant?: "primary" | "ghost";
   className?: string;
   fullWidth?: boolean;
+  disabled?: boolean;
 }
 
 export function CTAButton({
@@ -110,14 +111,17 @@ export function CTAButton({
   variant = "primary",
   className = "",
   fullWidth = false,
+  disabled = false,
 }: CTAButtonProps) {
   const base = variant === "primary" ? "btn-primary" : "btn-ghost";
+  const disabledStyles = disabled ? "opacity-50 cursor-not-allowed" : "";
   return (
     <motion.button
-      onClick={onClick}
-      className={`${base} ${fullWidth ? "w-full" : ""} ${className}`}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
+      className={`${base} ${fullWidth ? "w-full" : ""} ${disabledStyles} ${className}`}
+      whileHover={disabled ? {} : { scale: 1.02 }}
+      whileTap={disabled ? {} : { scale: 0.98 }}
       transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
     >
       {children}

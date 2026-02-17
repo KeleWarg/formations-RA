@@ -22,7 +22,7 @@ import {
   TestimonialQuote,
 } from "@/components/formations-ui";
 import { MotionStagger, MotionFadeIn } from "@/components/motion";
-import { Lock, Shield } from "lucide-react";
+import { ChevronDown, Lock, Shield } from "lucide-react";
 
 // ─── CONSTANTS ──────────────────────────────────────────
 
@@ -84,7 +84,7 @@ const initialFormData: FormData = {
   email: "",
   phone: "",
   entityName: "",
-  entityType: "",
+  entityType: "LLC",
   cardName: "",
   cardNumber: "",
   cardExpiry: "",
@@ -113,7 +113,7 @@ export default function RegisteredAgentFlow() {
 
   const goNext = () => {
     setDirection(1);
-    setStep((s) => Math.min(s + 1, 9));
+    setStep((s) => Math.min(s + 1, 8));
   };
 
   const goBack = () => {
@@ -152,10 +152,10 @@ export default function RegisteredAgentFlow() {
     }
   }, [step]);
 
-  const progressPercent = step === 0 ? 0 : step >= 9 ? 100 : (step / 9) * 100;
+  const progressPercent = step === 0 ? 0 : step >= 8 ? 100 : (step / 8) * 100;
   const selectedPlan = PLANS[formData.planIndex];
-  const showProgress = step > 0 && step < 9;
-  const showBack = step > 0 && step < 9;
+  const showProgress = step > 0 && step < 8;
+  const showBack = step > 0 && step < 8;
 
   // Centralized step validation
   const isStepValid = (): boolean => {
@@ -178,10 +178,8 @@ export default function RegisteredAgentFlow() {
           formData.phone.trim()
         );
       case 6:
-        return !!formData.entityName.trim();
+        return !!(formData.entityName.trim() && formData.entityType);
       case 7:
-        return !!formData.entityType;
-      case 8:
         return !!(
           formData.cardName.trim() &&
           formData.cardNumber.trim() &&
@@ -207,7 +205,7 @@ export default function RegisteredAgentFlow() {
     4: "Continue",
     5: "Continue",
     6: "Continue",
-    8: "Complete my order",
+    7: "Complete my order",
   };
   const showMobileFooter = step in mobileCTALabels;
 
@@ -302,15 +300,12 @@ export default function RegisteredAgentFlow() {
               <StepPersonalInfo formData={formData} update={update} onNext={goNextGuarded} disabled={!canProceed} />
             )}
             {step === 6 && (
-              <StepEntityName formData={formData} update={update} onNext={goNextGuarded} disabled={!canProceed} />
+              <StepBusinessName formData={formData} update={update} onNext={goNextGuarded} disabled={!canProceed} />
             )}
             {step === 7 && (
-              <StepEntityType formData={formData} update={update} onNext={goNext} />
-            )}
-            {step === 8 && (
               <StepCheckout formData={formData} update={update} onNext={goNextGuarded} disabled={!canProceed} />
             )}
-            {step === 9 && <StepConfirmation formData={formData} />}
+            {step === 8 && <StepConfirmation formData={formData} />}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -806,27 +801,52 @@ function StepPersonalInfo({ formData, update, onNext, disabled }: StepProps) {
   );
 }
 
-// ─── STEP 6: ENTITY NAME ────────────────────────────────
+// ─── STEP 6: BUSINESS NAME & TYPE ───────────────────────
 
-function StepEntityName({ formData, update, onNext, disabled }: StepProps) {
+function StepBusinessName({ formData, update, onNext, disabled }: StepProps) {
+  const entityTypeOptions = ENTITY_TYPES.map((t) => ({ value: t, label: t }));
+
   return (
     <MotionStagger className="flex flex-col items-center gap-xl max-w-[560px] w-full pt-xl pb-xl">
       <MotionFadeIn className="flex flex-col items-center gap-sm text-center">
         <h1 className="text-title-sm font-bold text-text-dark-blue">
-          What is your entity name?
+          What is your business name?
         </h1>
         <p className="text-body-md text-neutral-400">
-          Enter the legal name of your business as registered with the state.
+          Enter the legal name and type of your business as registered with the
+          state.
         </p>
       </MotionFadeIn>
 
       <MotionFadeIn className="flex flex-col gap-lg w-full">
-        <FormInput
-          label="Entity name"
-          placeholder="e.g. Smith Consulting LLC"
-          value={formData.entityName}
-          onChange={(val) => update({ entityName: val })}
-        />
+        <div className="flex flex-col gap-sm">
+          <label className="text-body-sm font-semibold text-neutral-800">
+            Entity name &amp; type
+          </label>
+          <div className="flex flex-col tablet:flex-row gap-sm">
+            <input
+              type="text"
+              placeholder="e.g. Smith Consulting"
+              value={formData.entityName}
+              onChange={(e) => update({ entityName: e.target.value })}
+              className="min-w-0 flex-1 py-md px-lg rounded-sm border border-outline shadow-input text-body-md text-neutral-800 bg-white focus:outline-none focus:border-primary-300 focus:ring-1 focus:ring-primary-200 transition-colors"
+            />
+            <div className="relative w-full tablet:w-auto shrink-0">
+              <select
+                value={formData.entityType || "LLC"}
+                onChange={(e) => update({ entityType: e.target.value })}
+                className="w-full py-md pl-lg pr-[40px] rounded-sm border border-outline shadow-input text-body-md text-neutral-800 appearance-none bg-white focus:outline-none focus:border-primary-300 focus:ring-1 focus:ring-primary-200 transition-colors cursor-pointer"
+              >
+                {ENTITY_TYPES.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-lg top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
+            </div>
+          </div>
+        </div>
         <CTAButton
           fullWidth
           onClick={onNext}
@@ -835,39 +855,6 @@ function StepEntityName({ formData, update, onNext, disabled }: StepProps) {
         >
           Continue
         </CTAButton>
-      </MotionFadeIn>
-    </MotionStagger>
-  );
-}
-
-// ─── STEP 7: ENTITY TYPE ────────────────────────────────
-
-function StepEntityType({ formData, update, onNext }: StepProps) {
-  const handleSelect = (type: string) => {
-    update({ entityType: type });
-    setTimeout(onNext, 200);
-  };
-
-  return (
-    <MotionStagger className="flex flex-col items-center gap-xl max-w-[560px] w-full pt-xl pb-xl">
-      <MotionFadeIn className="flex flex-col items-center gap-sm text-center">
-        <h1 className="text-title-sm font-bold text-text-dark-blue">
-          What type of entity is your business?
-        </h1>
-        <p className="text-body-md text-neutral-400">
-          Select the entity type registered with your state.
-        </p>
-      </MotionFadeIn>
-
-      <MotionFadeIn className="flex flex-col gap-md w-full">
-        {ENTITY_TYPES.map((type) => (
-          <FormOption
-            key={type}
-            label={type}
-            selected={formData.entityType === type}
-            onClick={() => handleSelect(type)}
-          />
-        ))}
       </MotionFadeIn>
     </MotionStagger>
   );

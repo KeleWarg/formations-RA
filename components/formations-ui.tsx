@@ -606,6 +606,7 @@ interface OrderSummaryProps {
   planYears: number;
   perYearPrice: number;
   totalPrice: number;
+  stateFilingFee?: number;
 }
 
 export function OrderSummary({
@@ -613,9 +614,12 @@ export function OrderSummary({
   planYears,
   perYearPrice,
   totalPrice,
+  stateFilingFee = 20,
 }: OrderSummaryProps) {
+  const grandTotal = totalPrice + stateFilingFee;
+
   return (
-    <div className="bg-neutral-50/50 border border-outline rounded-sm p-xl">
+    <div className="bg-primary-50/50 border border-outline rounded-sm p-xl">
       <p className="text-body-xs font-semibold text-neutral-400 uppercase tracking-wider mb-md">
         ORDER SUMMARY
       </p>
@@ -630,10 +634,18 @@ export function OrderSummary({
           ${perYearPrice.toFixed(2)}/yr
         </span>
       </div>
+      <div className="flex items-center justify-between mt-xs">
+        <span className="text-body-sm text-neutral-400">
+          State filing fee
+        </span>
+        <span className="text-body-sm text-neutral-400">
+          ${stateFilingFee}
+        </span>
+      </div>
       <div className="flex items-center justify-between mt-md pt-md border-t border-outline">
         <span className="text-body-md font-bold text-neutral-800">Total</span>
         <div className="flex items-baseline gap-xs">
-          <span className="text-title-sm font-bold text-secondary-500">${totalPrice}</span>
+          <span className="text-title-sm font-bold text-neutral-800">${grandTotal}</span>
           <span className="text-body-xs text-neutral-400">total</span>
         </div>
       </div>

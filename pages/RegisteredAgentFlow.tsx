@@ -39,7 +39,77 @@ const US_STATES = [
 
 const EMPLOYEE_OPTIONS = ["Just me", "2-5 employees", "6-20 employees", "20+ employees"];
 
+const BUSINESS_STATUS_OPTIONS = [
+  { value: "new", label: "I'm starting a new business" },
+  { value: "existing", label: "I already have a business" },
+];
+
 const ENTITY_TYPES = ["LLC", "Corporation", "Nonprofit", "Partnership", "Sole Proprietorship"];
+
+// ─── STATE-SPECIFIC DATA ────────────────────────────────
+
+interface StateData {
+  name: string;
+  penaltyAmount: string;
+  raUsagePercent: string;
+}
+
+const STATE_DATA: Record<string, StateData> = {
+  Alabama: { name: "Alabama", penaltyAmount: "$300", raUsagePercent: "68%" },
+  Alaska: { name: "Alaska", penaltyAmount: "$200", raUsagePercent: "72%" },
+  Arizona: { name: "Arizona", penaltyAmount: "$250", raUsagePercent: "74%" },
+  Arkansas: { name: "Arkansas", penaltyAmount: "$300", raUsagePercent: "65%" },
+  California: { name: "California", penaltyAmount: "$250", raUsagePercent: "78%" },
+  Colorado: { name: "Colorado", penaltyAmount: "$200", raUsagePercent: "71%" },
+  Connecticut: { name: "Connecticut", penaltyAmount: "$250", raUsagePercent: "69%" },
+  Delaware: { name: "Delaware", penaltyAmount: "$200", raUsagePercent: "82%" },
+  Florida: { name: "Florida", penaltyAmount: "$400", raUsagePercent: "76%" },
+  Georgia: { name: "Georgia", penaltyAmount: "$300", raUsagePercent: "73%" },
+  Hawaii: { name: "Hawaii", penaltyAmount: "$200", raUsagePercent: "64%" },
+  Idaho: { name: "Idaho", penaltyAmount: "$200", raUsagePercent: "67%" },
+  Illinois: { name: "Illinois", penaltyAmount: "$300", raUsagePercent: "75%" },
+  Indiana: { name: "Indiana", penaltyAmount: "$250", raUsagePercent: "70%" },
+  Iowa: { name: "Iowa", penaltyAmount: "$200", raUsagePercent: "66%" },
+  Kansas: { name: "Kansas", penaltyAmount: "$250", raUsagePercent: "68%" },
+  Kentucky: { name: "Kentucky", penaltyAmount: "$300", raUsagePercent: "67%" },
+  Louisiana: { name: "Louisiana", penaltyAmount: "$250", raUsagePercent: "69%" },
+  Maine: { name: "Maine", penaltyAmount: "$200", raUsagePercent: "63%" },
+  Maryland: { name: "Maryland", penaltyAmount: "$300", raUsagePercent: "72%" },
+  Massachusetts: { name: "Massachusetts", penaltyAmount: "$300", raUsagePercent: "74%" },
+  Michigan: { name: "Michigan", penaltyAmount: "$250", raUsagePercent: "71%" },
+  Minnesota: { name: "Minnesota", penaltyAmount: "$200", raUsagePercent: "70%" },
+  Mississippi: { name: "Mississippi", penaltyAmount: "$300", raUsagePercent: "65%" },
+  Missouri: { name: "Missouri", penaltyAmount: "$250", raUsagePercent: "68%" },
+  Montana: { name: "Montana", penaltyAmount: "$200", raUsagePercent: "66%" },
+  Nebraska: { name: "Nebraska", penaltyAmount: "$200", raUsagePercent: "67%" },
+  Nevada: { name: "Nevada", penaltyAmount: "$300", raUsagePercent: "79%" },
+  "New Hampshire": { name: "New Hampshire", penaltyAmount: "$250", raUsagePercent: "64%" },
+  "New Jersey": { name: "New Jersey", penaltyAmount: "$300", raUsagePercent: "73%" },
+  "New Mexico": { name: "New Mexico", penaltyAmount: "$200", raUsagePercent: "66%" },
+  "New York": { name: "New York", penaltyAmount: "$350", raUsagePercent: "77%" },
+  "North Carolina": { name: "North Carolina", penaltyAmount: "$250", raUsagePercent: "72%" },
+  "North Dakota": { name: "North Dakota", penaltyAmount: "$200", raUsagePercent: "63%" },
+  Ohio: { name: "Ohio", penaltyAmount: "$250", raUsagePercent: "70%" },
+  Oklahoma: { name: "Oklahoma", penaltyAmount: "$250", raUsagePercent: "67%" },
+  Oregon: { name: "Oregon", penaltyAmount: "$200", raUsagePercent: "71%" },
+  Pennsylvania: { name: "Pennsylvania", penaltyAmount: "$300", raUsagePercent: "74%" },
+  "Rhode Island": { name: "Rhode Island", penaltyAmount: "$200", raUsagePercent: "65%" },
+  "South Carolina": { name: "South Carolina", penaltyAmount: "$250", raUsagePercent: "68%" },
+  "South Dakota": { name: "South Dakota", penaltyAmount: "$200", raUsagePercent: "64%" },
+  Tennessee: { name: "Tennessee", penaltyAmount: "$300", raUsagePercent: "70%" },
+  Texas: { name: "Texas", penaltyAmount: "$350", raUsagePercent: "80%" },
+  Utah: { name: "Utah", penaltyAmount: "$200", raUsagePercent: "69%" },
+  Vermont: { name: "Vermont", penaltyAmount: "$200", raUsagePercent: "62%" },
+  Virginia: { name: "Virginia", penaltyAmount: "$300", raUsagePercent: "73%" },
+  Washington: { name: "Washington", penaltyAmount: "$250", raUsagePercent: "75%" },
+  "West Virginia": { name: "West Virginia", penaltyAmount: "$200", raUsagePercent: "64%" },
+  Wisconsin: { name: "Wisconsin", penaltyAmount: "$250", raUsagePercent: "69%" },
+  Wyoming: { name: "Wyoming", penaltyAmount: "$200", raUsagePercent: "76%" },
+};
+
+function getStateData(stateName: string): StateData {
+  return STATE_DATA[stateName] ?? { name: stateName || "your state", penaltyAmount: "$250", raUsagePercent: "70%" };
+}
 
 const PLANS = [
   { years: 1, totalPrice: 199, perYearPrice: 199, bestValue: false },
@@ -60,7 +130,7 @@ const INCLUDED_FEATURES = [
 interface FormData {
   state: string;
   employees: string;
-  startDate: string;
+  businessStatus: string;
   planIndex: number;
   firstName: string;
   lastName: string;
@@ -77,7 +147,7 @@ interface FormData {
 const initialFormData: FormData = {
   state: "",
   employees: "",
-  startDate: "",
+  businessStatus: "",
   planIndex: 1,
   firstName: "",
   lastName: "",
@@ -165,7 +235,7 @@ export default function RegisteredAgentFlow() {
       case 1:
         return !!formData.employees;
       case 2:
-        return !!formData.startDate.trim();
+        return !!formData.businessStatus;
       case 3:
         return analysisPhase === "complete";
       case 4:
@@ -200,7 +270,6 @@ export default function RegisteredAgentFlow() {
 
   const mobileCTALabels: Record<number, string> = {
     0: "Get started",
-    2: "Continue",
     3: "See your personalized plan",
     4: "Continue",
     5: "Continue",
@@ -288,10 +357,10 @@ export default function RegisteredAgentFlow() {
               <StepEmployees formData={formData} update={update} onNext={goNext} />
             )}
             {step === 2 && (
-              <StepStartDate formData={formData} update={update} onNext={goNextGuarded} disabled={!canProceed} />
+              <StepBusinessStatus formData={formData} update={update} onNext={goNext} />
             )}
             {step === 3 && (
-              <StepAnalysis formData={formData} onNext={goNextGuarded} analysisPhase={analysisPhase} />
+              <StepAnalysis formData={formData} onNext={goNextGuarded} analysisPhase={analysisPhase} update={update} />
             )}
             {step === 4 && (
               <StepPricing formData={formData} update={update} onNext={goNextGuarded} />
@@ -426,33 +495,34 @@ function StepEmployees({ formData, update, onNext }: StepProps) {
   );
 }
 
-// ─── STEP 2: BUSINESS START DATE ────────────────────────
+// ─── STEP 2: BUSINESS STATUS ────────────────────────────
 
-function StepStartDate({ formData, update, onNext, disabled }: StepProps) {
+function StepBusinessStatus({ formData, update, onNext }: StepProps) {
+  const handleSelect = (value: string) => {
+    update({ businessStatus: value });
+    setTimeout(onNext, 200);
+  };
+
   return (
     <MotionStagger className="flex flex-col items-center gap-xl max-w-[500px] w-full pt-xl pb-xl">
       <MotionFadeIn className="flex flex-col items-center gap-sm text-center">
         <h1 className="text-title-sm font-bold text-text-dark-blue">
-          When did you start your business?
+          Tell us about your business
         </h1>
         <p className="text-body-md text-neutral-400">
           This helps us personalize your experience.
         </p>
       </MotionFadeIn>
 
-      <MotionFadeIn className="flex flex-col gap-lg w-full">
-        <DateInput
-          value={formData.startDate}
-          onChange={(val) => update({ startDate: val })}
-        />
-        <CTAButton
-          fullWidth
-          onClick={onNext}
-          disabled={disabled}
-          className="hidden tablet:flex"
-        >
-          Continue
-        </CTAButton>
+      <MotionFadeIn className="flex flex-col gap-md w-full">
+        {BUSINESS_STATUS_OPTIONS.map((option) => (
+          <FormOption
+            key={option.value}
+            label={option.label}
+            selected={formData.businessStatus === option.value}
+            onClick={() => handleSelect(option.value)}
+          />
+        ))}
       </MotionFadeIn>
     </MotionStagger>
   );
@@ -472,8 +542,11 @@ function StepAnalysis({
   formData,
   onNext,
   analysisPhase,
-}: ReadOnlyStepProps & { analysisPhase: "loading" | "complete" }) {
-  const stateName = formData.state || "your state";
+  update,
+}: StepProps & { analysisPhase: "loading" | "complete" }) {
+  const stateData = getStateData(formData.state);
+  const stateName = stateData.name;
+  const isNew = formData.businessStatus === "new";
   const [visibleItems, setVisibleItems] = useState(0);
 
   useEffect(() => {
@@ -500,7 +573,7 @@ function StepAnalysis({
             <Shield className="w-6 h-6 text-primary-500" />
           </div>
           <h2 className="text-title-xs font-bold text-text-dark-blue">
-            Analyzing your business…
+            Analyzing your responses…
           </h2>
           <p className="text-body-sm text-neutral-400">
             We&apos;re reviewing {stateName} requirements for your business.
@@ -541,9 +614,27 @@ function StepAnalysis({
     );
   }
 
+  // Branch: new business vs existing business
+  return isNew ? (
+    <NewBusinessContent stateName={stateName} penaltyAmount={stateData.penaltyAmount} onNext={onNext} />
+  ) : (
+    <ExistingBusinessContent stateName={stateName} raUsagePercent={stateData.raUsagePercent} onNext={onNext} />
+  );
+}
+
+// ─── NEW BUSINESS CONTENT ───────────────────────────────
+
+function NewBusinessContent({
+  stateName,
+  penaltyAmount,
+  onNext,
+}: {
+  stateName: string;
+  penaltyAmount: string;
+  onNext: () => void;
+}) {
   return (
     <MotionStagger className="flex flex-col gap-xl max-w-[560px] w-full pt-xl pb-xl">
-      {/* Hero card */}
       <MotionFadeIn>
         <div className="bg-white border border-outline rounded-md p-xl">
           <h2 className="text-title-xs font-bold text-text-dark-blue">
@@ -555,7 +646,6 @@ function StepAnalysis({
           </p>
 
           <div className="flex flex-col gap-md mt-lg">
-            {/* Info card */}
             <div className="flex items-start gap-md p-lg bg-primary-50 rounded-sm">
               <Shield className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
               <div>
@@ -569,16 +659,14 @@ function StepAnalysis({
               </div>
             </div>
 
-            {/* Warning card */}
             <WarningCard
               title={`${stateName} state requirement`}
-              description={`Without a registered agent, your business risks fines up to $300 and possible administrative dissolution.`}
+              description={`Without a registered agent, your business risks fines up to ${penaltyAmount} and possible administrative dissolution.`}
             />
           </div>
         </div>
       </MotionFadeIn>
 
-      {/* Risk items */}
       <MotionFadeIn>
         <h3 className="text-body-md font-bold text-text-dark-blue mb-md">
           What you could miss without one:
@@ -590,7 +678,6 @@ function StepAnalysis({
         </div>
       </MotionFadeIn>
 
-      {/* Why Formations */}
       <MotionFadeIn>
         <div className="bg-white border border-outline rounded-md p-xl">
           <h3 className="text-body-md font-bold text-text-dark-blue mb-lg">
@@ -630,10 +717,114 @@ function StepAnalysis({
         </div>
       </MotionFadeIn>
 
-      {/* Testimonial */}
       <MotionFadeIn>
         <TestimonialQuote
           quote="This is my first time starting any kind of a business so I didn't know where to begin, but the whole process through Formations was simple and made it easy to get me started."
+          name="Lauren Flynn"
+          company="Girl and Bubbly Design LLC"
+        />
+      </MotionFadeIn>
+
+      <MotionFadeIn className="hidden tablet:block">
+        <CTAButton fullWidth onClick={onNext}>
+          See your personalized plan
+        </CTAButton>
+      </MotionFadeIn>
+    </MotionStagger>
+  );
+}
+
+// ─── EXISTING BUSINESS CONTENT ──────────────────────────
+
+function ExistingBusinessContent({
+  stateName,
+  raUsagePercent,
+  onNext,
+}: {
+  stateName: string;
+  raUsagePercent: string;
+  onNext: () => void;
+}) {
+  const VALUE_PROPS = [
+    { title: "Privacy protection", desc: "Our address on public records instead of yours. Legal notices at our office, not your home." },
+    { title: "Never miss critical documents", desc: "Our agents are always present during business hours. No missed deadlines, no missed correspondences." },
+    { title: "Instant alerts & easy access", desc: "Stay informed with instant notifications and access notices anywhere through your secure document hub." },
+    { title: "Multi-state expansion", desc: "Grow beyond your home state with registered agents authorized in each state you plan to operate in." },
+  ];
+
+  const STATS = [
+    { stat: "90%", label: "say setup was simple and effortless" },
+    { stat: "82%", label: "had it done in less than 30 minutes" },
+    { stat: "79%", label: "completed their LLC application in one sitting" },
+  ];
+
+  return (
+    <MotionStagger className="flex flex-col gap-xl max-w-[560px] w-full pt-xl pb-xl">
+      {/* Hero card */}
+      <MotionFadeIn>
+        <div className="bg-primary-50 border border-outline rounded-md p-xl">
+          <h2 className="text-title-xs font-bold text-text-dark-blue">
+            You&apos;re in expert hands with{" "}
+            <span className="text-primary-500">Formations</span>
+          </h2>
+          <p className="text-body-sm text-neutral-400 mt-sm mb-lg">
+            {raUsagePercent} of {stateName} business owners chose us as their
+            registered agent. Here&apos;s why.
+          </p>
+
+          {/* Social proof */}
+          <div className="flex items-center gap-md mb-lg">
+            <div className="flex -space-x-2">
+              {["bg-primary-500", "bg-primary-700", "bg-secondary-500", "bg-tertiary-400"].map((bg, i) => (
+                <div
+                  key={i}
+                  className={`w-7 h-7 rounded-full ${bg} border-2 border-white flex items-center justify-center text-white text-body-xs font-bold`}
+                >
+                  {String.fromCharCode(65 + i)}
+                </div>
+              ))}
+            </div>
+            <span className="text-body-sm text-neutral-400">
+              <span className="font-bold text-neutral-800">50,000+</span> businesses protected
+            </span>
+          </div>
+
+          {/* Key stats */}
+          <div className="grid grid-cols-3 gap-md">
+            {STATS.map((s, i) => (
+              <div key={i} className="text-center bg-white rounded-sm p-md border border-outline">
+                <p className="text-title-sm font-bold text-primary-500">{s.stat}</p>
+                <p className="text-body-xs text-neutral-400 mt-xs leading-tight">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </MotionFadeIn>
+
+      {/* Why choose Formations */}
+      <MotionFadeIn>
+        <div className="bg-white border border-outline rounded-md p-xl">
+          <h3 className="text-body-md font-bold text-text-dark-blue mb-lg">
+            Why {stateName} business owners choose us:
+          </h3>
+          <div className="flex flex-col gap-lg">
+            {VALUE_PROPS.map((vp, i) => (
+              <div key={i} className="flex gap-md">
+                <CheckCircle className="w-5 h-5 mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-body-sm font-bold text-neutral-800">{vp.title}</p>
+                  <p className="text-body-xs text-neutral-400 mt-xs">{vp.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </MotionFadeIn>
+
+      {/* Testimonial */}
+      <MotionFadeIn>
+        <TestimonialQuote
+          quote="Forming my LLC with Formations was super easy and cost effective. They walked me through everything I needed for my business down to credit card options, banking, and lines of credit."
           name="Lauren Flynn"
           company="Girl and Bubbly Design LLC"
         />

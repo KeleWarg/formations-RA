@@ -545,6 +545,8 @@ interface PricingOptionProps {
   years: number;
   totalPrice: number;
   perYearPrice: number;
+  originalPrice?: number | null;
+  savePct?: string | null;
   selected?: boolean;
   bestValue?: boolean;
   onClick?: () => void;
@@ -554,6 +556,8 @@ export function PricingOption({
   years,
   totalPrice,
   perYearPrice,
+  originalPrice,
+  savePct,
   selected = false,
   bestValue = false,
   onClick,
@@ -570,7 +574,7 @@ export function PricingOption({
       transition={{ duration: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
     >
       {bestValue && (
-        <span className="absolute -top-3 right-4 bg-secondary-500 text-white text-[10px] font-bold uppercase tracking-wider px-md py-[3px] rounded-xs">
+        <span className="absolute -top-3 left-4 bg-secondary-500 text-white text-[10px] font-bold uppercase tracking-wider px-md py-[3px] rounded-xs">
           BEST VALUE
         </span>
       )}
@@ -582,18 +586,23 @@ export function PricingOption({
         >
           {selected && <div className="w-2.5 h-2.5 rounded-full bg-primary-500" />}
         </div>
-        <div className="flex items-baseline gap-xs">
-          <span className="text-body-md font-semibold text-neutral-800">
-            {years} Year{years > 1 ? "s" : ""}
-          </span>
-          <span className="text-body-xs text-neutral-400">
-            (${perYearPrice.toFixed(2)}/yr)
-          </span>
-        </div>
+        <span className={`text-body-md font-semibold ${selected ? "text-primary-500" : "text-neutral-800"}`}>
+          {years} Year{years > 1 ? "s" : ""}
+        </span>
       </div>
-      <div className="flex items-baseline gap-xs">
-        <span className="text-title-sm font-bold text-neutral-800">${totalPrice}</span>
-        {years > 1 && <span className="text-body-xs text-neutral-400">total</span>}
+      <div className="flex items-center gap-sm">
+        {savePct && (
+          <span className="text-body-xs font-semibold px-sm py-[2px] rounded-xs bg-secondary-50 text-secondary-500">
+            Save {savePct}
+          </span>
+        )}
+        {originalPrice && (
+          <span className="text-body-sm line-through text-error-500">${originalPrice}</span>
+        )}
+        <div className="text-right">
+          <span className="text-title-sm font-bold text-neutral-800">${totalPrice}</span>
+          <p className="text-body-xs text-neutral-400">${perYearPrice.toFixed(2)}/yr</p>
+        </div>
       </div>
     </motion.button>
   );

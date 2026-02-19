@@ -39,11 +39,6 @@ const US_STATES = [
 
 const EMPLOYEE_OPTIONS = ["Just me", "2-5 employees", "6-20 employees", "20+ employees"];
 
-const BUSINESS_STATUS_OPTIONS = [
-  { value: "new", label: "I'm starting a new business" },
-  { value: "existing", label: "I already have a business" },
-];
-
 const ENTITY_TYPES = ["LLC", "Corporation", "Nonprofit", "Partnership", "Sole Proprietorship"];
 
 // ─── STATE-SPECIFIC DATA ────────────────────────────────
@@ -55,55 +50,55 @@ interface StateData {
 }
 
 const STATE_DATA: Record<string, StateData> = {
-  Alabama: { name: "Alabama", penaltyAmount: "$300", raUsagePercent: "68%" },
-  Alaska: { name: "Alaska", penaltyAmount: "$200", raUsagePercent: "72%" },
-  Arizona: { name: "Arizona", penaltyAmount: "$250", raUsagePercent: "74%" },
-  Arkansas: { name: "Arkansas", penaltyAmount: "$300", raUsagePercent: "65%" },
+  Alabama: { name: "Alabama", penaltyAmount: "$100", raUsagePercent: "68%" },
+  Alaska: { name: "Alaska", penaltyAmount: "$200", raUsagePercent: "65%" },
+  Arizona: { name: "Arizona", penaltyAmount: "$100", raUsagePercent: "71%" },
+  Arkansas: { name: "Arkansas", penaltyAmount: "$300", raUsagePercent: "66%" },
   California: { name: "California", penaltyAmount: "$250", raUsagePercent: "78%" },
-  Colorado: { name: "Colorado", penaltyAmount: "$200", raUsagePercent: "71%" },
+  Colorado: { name: "Colorado", penaltyAmount: "$100", raUsagePercent: "72%" },
   Connecticut: { name: "Connecticut", penaltyAmount: "$250", raUsagePercent: "69%" },
   Delaware: { name: "Delaware", penaltyAmount: "$200", raUsagePercent: "82%" },
   Florida: { name: "Florida", penaltyAmount: "$400", raUsagePercent: "76%" },
-  Georgia: { name: "Georgia", penaltyAmount: "$300", raUsagePercent: "73%" },
-  Hawaii: { name: "Hawaii", penaltyAmount: "$200", raUsagePercent: "64%" },
-  Idaho: { name: "Idaho", penaltyAmount: "$200", raUsagePercent: "67%" },
-  Illinois: { name: "Illinois", penaltyAmount: "$300", raUsagePercent: "75%" },
-  Indiana: { name: "Indiana", penaltyAmount: "$250", raUsagePercent: "70%" },
-  Iowa: { name: "Iowa", penaltyAmount: "$200", raUsagePercent: "66%" },
-  Kansas: { name: "Kansas", penaltyAmount: "$250", raUsagePercent: "68%" },
-  Kentucky: { name: "Kentucky", penaltyAmount: "$300", raUsagePercent: "67%" },
-  Louisiana: { name: "Louisiana", penaltyAmount: "$250", raUsagePercent: "69%" },
-  Maine: { name: "Maine", penaltyAmount: "$200", raUsagePercent: "63%" },
-  Maryland: { name: "Maryland", penaltyAmount: "$300", raUsagePercent: "72%" },
-  Massachusetts: { name: "Massachusetts", penaltyAmount: "$300", raUsagePercent: "74%" },
-  Michigan: { name: "Michigan", penaltyAmount: "$250", raUsagePercent: "71%" },
-  Minnesota: { name: "Minnesota", penaltyAmount: "$200", raUsagePercent: "70%" },
-  Mississippi: { name: "Mississippi", penaltyAmount: "$300", raUsagePercent: "65%" },
-  Missouri: { name: "Missouri", penaltyAmount: "$250", raUsagePercent: "68%" },
-  Montana: { name: "Montana", penaltyAmount: "$200", raUsagePercent: "66%" },
-  Nebraska: { name: "Nebraska", penaltyAmount: "$200", raUsagePercent: "67%" },
+  Georgia: { name: "Georgia", penaltyAmount: "$100", raUsagePercent: "70%" },
+  Hawaii: { name: "Hawaii", penaltyAmount: "$150", raUsagePercent: "64%" },
+  Idaho: { name: "Idaho", penaltyAmount: "$100", raUsagePercent: "67%" },
+  Illinois: { name: "Illinois", penaltyAmount: "$300", raUsagePercent: "74%" },
+  Indiana: { name: "Indiana", penaltyAmount: "$100", raUsagePercent: "68%" },
+  Iowa: { name: "Iowa", penaltyAmount: "$100", raUsagePercent: "65%" },
+  Kansas: { name: "Kansas", penaltyAmount: "$200", raUsagePercent: "66%" },
+  Kentucky: { name: "Kentucky", penaltyAmount: "$100", raUsagePercent: "67%" },
+  Louisiana: { name: "Louisiana", penaltyAmount: "$150", raUsagePercent: "68%" },
+  Maine: { name: "Maine", penaltyAmount: "$100", raUsagePercent: "63%" },
+  Maryland: { name: "Maryland", penaltyAmount: "$200", raUsagePercent: "71%" },
+  Massachusetts: { name: "Massachusetts", penaltyAmount: "$250", raUsagePercent: "73%" },
+  Michigan: { name: "Michigan", penaltyAmount: "$200", raUsagePercent: "69%" },
+  Minnesota: { name: "Minnesota", penaltyAmount: "$100", raUsagePercent: "70%" },
+  Mississippi: { name: "Mississippi", penaltyAmount: "$200", raUsagePercent: "64%" },
+  Missouri: { name: "Missouri", penaltyAmount: "$100", raUsagePercent: "68%" },
+  Montana: { name: "Montana", penaltyAmount: "$100", raUsagePercent: "65%" },
+  Nebraska: { name: "Nebraska", penaltyAmount: "$200", raUsagePercent: "66%" },
   Nevada: { name: "Nevada", penaltyAmount: "$300", raUsagePercent: "79%" },
-  "New Hampshire": { name: "New Hampshire", penaltyAmount: "$250", raUsagePercent: "64%" },
-  "New Jersey": { name: "New Jersey", penaltyAmount: "$300", raUsagePercent: "73%" },
-  "New Mexico": { name: "New Mexico", penaltyAmount: "$200", raUsagePercent: "66%" },
-  "New York": { name: "New York", penaltyAmount: "$350", raUsagePercent: "77%" },
-  "North Carolina": { name: "North Carolina", penaltyAmount: "$250", raUsagePercent: "72%" },
-  "North Dakota": { name: "North Dakota", penaltyAmount: "$200", raUsagePercent: "63%" },
-  Ohio: { name: "Ohio", penaltyAmount: "$250", raUsagePercent: "70%" },
-  Oklahoma: { name: "Oklahoma", penaltyAmount: "$250", raUsagePercent: "67%" },
-  Oregon: { name: "Oregon", penaltyAmount: "$200", raUsagePercent: "71%" },
-  Pennsylvania: { name: "Pennsylvania", penaltyAmount: "$300", raUsagePercent: "74%" },
-  "Rhode Island": { name: "Rhode Island", penaltyAmount: "$200", raUsagePercent: "65%" },
-  "South Carolina": { name: "South Carolina", penaltyAmount: "$250", raUsagePercent: "68%" },
-  "South Dakota": { name: "South Dakota", penaltyAmount: "$200", raUsagePercent: "64%" },
-  Tennessee: { name: "Tennessee", penaltyAmount: "$300", raUsagePercent: "70%" },
-  Texas: { name: "Texas", penaltyAmount: "$350", raUsagePercent: "80%" },
-  Utah: { name: "Utah", penaltyAmount: "$200", raUsagePercent: "69%" },
-  Vermont: { name: "Vermont", penaltyAmount: "$200", raUsagePercent: "62%" },
-  Virginia: { name: "Virginia", penaltyAmount: "$300", raUsagePercent: "73%" },
-  Washington: { name: "Washington", penaltyAmount: "$250", raUsagePercent: "75%" },
-  "West Virginia": { name: "West Virginia", penaltyAmount: "$200", raUsagePercent: "64%" },
-  Wisconsin: { name: "Wisconsin", penaltyAmount: "$250", raUsagePercent: "69%" },
+  "New Hampshire": { name: "New Hampshire", penaltyAmount: "$100", raUsagePercent: "64%" },
+  "New Jersey": { name: "New Jersey", penaltyAmount: "$250", raUsagePercent: "72%" },
+  "New Mexico": { name: "New Mexico", penaltyAmount: "$100", raUsagePercent: "66%" },
+  "New York": { name: "New York", penaltyAmount: "$250", raUsagePercent: "77%" },
+  "North Carolina": { name: "North Carolina", penaltyAmount: "$200", raUsagePercent: "70%" },
+  "North Dakota": { name: "North Dakota", penaltyAmount: "$100", raUsagePercent: "63%" },
+  Ohio: { name: "Ohio", penaltyAmount: "$200", raUsagePercent: "71%" },
+  Oklahoma: { name: "Oklahoma", penaltyAmount: "$100", raUsagePercent: "67%" },
+  Oregon: { name: "Oregon", penaltyAmount: "$100", raUsagePercent: "69%" },
+  Pennsylvania: { name: "Pennsylvania", penaltyAmount: "$200", raUsagePercent: "72%" },
+  "Rhode Island": { name: "Rhode Island", penaltyAmount: "$100", raUsagePercent: "64%" },
+  "South Carolina": { name: "South Carolina", penaltyAmount: "$100", raUsagePercent: "67%" },
+  "South Dakota": { name: "South Dakota", penaltyAmount: "$100", raUsagePercent: "65%" },
+  Tennessee: { name: "Tennessee", penaltyAmount: "$200", raUsagePercent: "69%" },
+  Texas: { name: "Texas", penaltyAmount: "$300", raUsagePercent: "75%" },
+  Utah: { name: "Utah", penaltyAmount: "$100", raUsagePercent: "68%" },
+  Vermont: { name: "Vermont", penaltyAmount: "$100", raUsagePercent: "63%" },
+  Virginia: { name: "Virginia", penaltyAmount: "$200", raUsagePercent: "72%" },
+  Washington: { name: "Washington", penaltyAmount: "$200", raUsagePercent: "73%" },
+  "West Virginia": { name: "West Virginia", penaltyAmount: "$100", raUsagePercent: "64%" },
+  Wisconsin: { name: "Wisconsin", penaltyAmount: "$200", raUsagePercent: "69%" },
   Wyoming: { name: "Wyoming", penaltyAmount: "$200", raUsagePercent: "76%" },
 };
 
@@ -112,9 +107,9 @@ function getStateData(stateName: string): StateData {
 }
 
 const PLANS = [
-  { years: 1, totalPrice: 199, perYearPrice: 199, bestValue: false },
-  { years: 2, totalPrice: 249, perYearPrice: 124.5, bestValue: true },
-  { years: 3, totalPrice: 299, perYearPrice: 99.67, bestValue: false },
+  { years: 3, totalPrice: 299, perYearPrice: 99.67, originalPrice: 597, savePct: "50%", bestValue: true },
+  { years: 2, totalPrice: 249, perYearPrice: 124.5, originalPrice: 398, savePct: "37%", bestValue: false },
+  { years: 1, totalPrice: 199, perYearPrice: 199, originalPrice: null, savePct: null, bestValue: false },
 ];
 
 const INCLUDED_FEATURES = [
@@ -130,6 +125,7 @@ const INCLUDED_FEATURES = [
 interface FormData {
   state: string;
   employees: string;
+  startDate: string;
   businessStatus: string;
   planIndex: number;
   firstName: string;
@@ -147,8 +143,9 @@ interface FormData {
 const initialFormData: FormData = {
   state: "",
   employees: "",
+  startDate: "",
   businessStatus: "",
-  planIndex: 1,
+  planIndex: 0,
   firstName: "",
   lastName: "",
   email: "",
@@ -235,7 +232,7 @@ export default function RegisteredAgentFlow() {
       case 1:
         return !!formData.employees;
       case 2:
-        return !!formData.businessStatus;
+        return !!formData.startDate;
       case 3:
         return analysisPhase === "complete";
       case 4:
@@ -270,6 +267,7 @@ export default function RegisteredAgentFlow() {
 
   const mobileCTALabels: Record<number, string> = {
     0: "Get started",
+    2: "Continue",
     3: "See your personalized plan",
     4: "Continue",
     5: "Continue",
@@ -357,7 +355,7 @@ export default function RegisteredAgentFlow() {
               <StepEmployees formData={formData} update={update} onNext={goNext} />
             )}
             {step === 2 && (
-              <StepBusinessStatus formData={formData} update={update} onNext={goNext} />
+              <StepBusinessStartDate formData={formData} update={update} onNext={goNext} />
             )}
             {step === 3 && (
               <StepAnalysis formData={formData} onNext={goNextGuarded} analysisPhase={analysisPhase} update={update} />
@@ -495,34 +493,117 @@ function StepEmployees({ formData, update, onNext }: StepProps) {
   );
 }
 
-// ─── STEP 2: BUSINESS STATUS ────────────────────────────
+// ─── STEP 2: BUSINESS START DATE ────────────────────────
 
-function StepBusinessStatus({ formData, update, onNext }: StepProps) {
-  const handleSelect = (value: string) => {
-    update({ businessStatus: value });
-    setTimeout(onNext, 200);
-  };
+function StepBusinessStartDate({ formData, update, onNext }: StepProps) {
+  const [month, setMonth] = useState("");
+  const [day, setDay] = useState("");
+  const [year, setYear] = useState("");
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 30 }, (_, i) => currentYear - i);
+  const months = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December",
+  ];
+  const daysInMonth = month && year
+    ? new Date(parseInt(year), parseInt(month), 0).getDate()
+    : 31;
+  const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+  useEffect(() => {
+    if (month && day && year) {
+      const dateStr = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+      const startDate = new Date(dateStr);
+      const threeMonthsAgo = new Date();
+      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+      const status = startDate >= threeMonthsAgo ? "new" : "existing";
+      update({ startDate: dateStr, businessStatus: status });
+    } else {
+      update({ startDate: "", businessStatus: "" });
+    }
+  }, [month, day, year]);
 
   return (
     <MotionStagger className="flex flex-col items-center gap-xl max-w-[500px] w-full pt-xl pb-xl">
       <MotionFadeIn className="flex flex-col items-center gap-sm text-center">
         <h1 className="text-title-sm font-bold text-text-dark-blue">
-          Tell us about your business
+          When did you start your business?
         </h1>
         <p className="text-body-md text-neutral-400">
           This helps us personalize your experience.
         </p>
       </MotionFadeIn>
 
-      <MotionFadeIn className="flex flex-col gap-md w-full">
-        {BUSINESS_STATUS_OPTIONS.map((option) => (
-          <FormOption
-            key={option.value}
-            label={option.label}
-            selected={formData.businessStatus === option.value}
-            onClick={() => handleSelect(option.value)}
-          />
-        ))}
+      <MotionFadeIn className="flex flex-col gap-lg w-full">
+        <div className="grid grid-cols-3 gap-sm">
+          <div>
+            <label className="block text-body-xs font-semibold text-neutral-400 mb-xs">
+              Month
+            </label>
+            <div className="relative">
+              <select
+                value={month}
+                onChange={(e) => setMonth(e.target.value)}
+                className="w-full py-md px-lg rounded-sm border border-outline shadow-input text-body-md appearance-none bg-white focus:outline-none focus:border-primary-300 focus:ring-1 focus:ring-primary-200 transition-colors cursor-pointer"
+                style={{ color: month ? "var(--color-neutral-800)" : "var(--color-neutral-400)" }}
+              >
+                <option value="">Month</option>
+                {months.map((m, i) => (
+                  <option key={m} value={String(i + 1)}>{m}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-lg top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-body-xs font-semibold text-neutral-400 mb-xs">
+              Day
+            </label>
+            <div className="relative">
+              <select
+                value={day}
+                onChange={(e) => setDay(e.target.value)}
+                className="w-full py-md px-lg rounded-sm border border-outline shadow-input text-body-md appearance-none bg-white focus:outline-none focus:border-primary-300 focus:ring-1 focus:ring-primary-200 transition-colors cursor-pointer"
+                style={{ color: day ? "var(--color-neutral-800)" : "var(--color-neutral-400)" }}
+              >
+                <option value="">Day</option>
+                {days.map((d) => (
+                  <option key={d} value={String(d)}>{d}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-lg top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-body-xs font-semibold text-neutral-400 mb-xs">
+              Year
+            </label>
+            <div className="relative">
+              <select
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                className="w-full py-md px-lg rounded-sm border border-outline shadow-input text-body-md appearance-none bg-white focus:outline-none focus:border-primary-300 focus:ring-1 focus:ring-primary-200 transition-colors cursor-pointer"
+                style={{ color: year ? "var(--color-neutral-800)" : "var(--color-neutral-400)" }}
+              >
+                <option value="">Year</option>
+                {years.map((y) => (
+                  <option key={y} value={String(y)}>{y}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-lg top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
+            </div>
+          </div>
+        </div>
+
+        <CTAButton
+          fullWidth
+          onClick={onNext}
+          disabled={!formData.startDate}
+          className="hidden tablet:flex"
+        >
+          Continue
+        </CTAButton>
       </MotionFadeIn>
     </MotionStagger>
   );
@@ -843,7 +924,9 @@ function ExistingBusinessContent({
 // ─── STEP 4: CHOOSE PLAN ────────────────────────────────
 
 function StepPricing({ formData, update, onNext }: StepProps) {
-  const stateName = formData.state || "your state";
+  const stateData = getStateData(formData.state);
+  const stateName = stateData.name;
+  const raUsagePercent = stateData.raUsagePercent;
 
   return (
     <MotionStagger className="flex flex-col items-center gap-xl max-w-[560px] w-full pt-xl pb-xl">
@@ -880,6 +963,8 @@ function StepPricing({ formData, update, onNext }: StepProps) {
             years={plan.years}
             totalPrice={plan.totalPrice}
             perYearPrice={plan.perYearPrice}
+            originalPrice={plan.originalPrice}
+            savePct={plan.savePct}
             bestValue={plan.bestValue}
             selected={formData.planIndex === i}
             onClick={() => update({ planIndex: i })}
@@ -917,7 +1002,7 @@ function StepPricing({ formData, update, onNext }: StepProps) {
       <MotionFadeIn className="text-center">
         <p className="text-body-sm text-neutral-500">
           <span className="font-bold text-neutral-800">
-            66% of businesses in {stateName}
+            {raUsagePercent} of businesses in {stateName}
           </span>{" "}
           use our Registered Agent service
         </p>

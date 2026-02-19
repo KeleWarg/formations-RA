@@ -661,7 +661,7 @@ function StepAnalysis({
           </p>
         </motion.div>
 
-        <div className="flex flex-col gap-md w-full">
+        <div className="flex flex-col items-center gap-md w-full">
           {ANALYSIS_STEPS.map((label, i) => (
             <motion.div
               key={label}
